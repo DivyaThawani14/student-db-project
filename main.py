@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
+import mysql.connector
+import re
 
 # Function to validate email format
 def validate_email(email):
@@ -36,29 +38,35 @@ def submit_form():
         messagebox.showerror("Error", "Age must be a valid integer")
         return
 
-    # Connect to the MySQL database
-    # db = mysqlclient.connect(host="your-rds-endpoint",
-    #                       user="your-username",
-    #                       password="your-password",
-    #                       db="your-database")
+    try:
+        # Connect to the MySQL database
+        cnx = mysql.connector.connect(
+            host='database-1.cp4iuymugi65.eu-central-1.rds.amazonaws.com',
+            user='admin',
+            password='admin123',
+            database='database-1>'
+        )
+        
+        # Create a cursor object
+        cursor = cnx.cursor()
 
-    # Create a cursor object
-    # cursor = db.cursor()
+        # Define the SQL query to insert data into the table
+        sql = "INSERT INTO students_data (name, email, age, gender, address, city, state, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 
-    # Define the SQL query to insert data into the table
-    # sql = "INSERT INTO students (name, email, age, gender, address, city, state, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        # Execute the SQL query with user input as parameters
+        cursor.execute(sql, (name, email, age, gender, address, city, state, country))
 
-    # Execute the SQL query with user input as parameters
-    # cursor.execute(sql, (name, email, age, gender, address, city, state, country))
+        # Commit the transaction
+        cnx.commit()
 
-    # Commit the transaction
-    # db.commit()
+        # Close the cursor and connection
+        cursor.close()
+        cnx.close()
 
-    # Close the database connection
-    # db.close()
-
-    # Show success message
-    messagebox.showinfo("Success", "Data submitted successfully")
+        # Show success message
+        messagebox.showinfo("Success", "Data submitted successfully")
+    except mysql.connector.Error as err:
+        messagebox.showerror("Error", f"Error: {err}")
 
 # Create main application window
 root = tk.Tk()
