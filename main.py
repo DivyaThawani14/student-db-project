@@ -39,13 +39,7 @@ def submit_form():
         return
 
     try:
-        # Connect to the MySQL database
-        cnx = mysql.connector.connect(
-            host='prod-db-1.chkyaa4u2erw.us-west-1.rds.amazonaws.com',
-            user='admin',
-            password='admin123',
-            database='db_1'
-        )
+      # rds credentials
         
         # Create a cursor object
         cursor = cnx.cursor()
