@@ -41,10 +41,10 @@ def submit_form():
     try:
         # Connect to the MySQL database
         cnx = mysql.connector.connect(
-            host='database-1.cp4iuymugi65.eu-central-1.rds.amazonaws.com',
+            host='prod-db-1.chkyaa4u2erw.us-west-1.rds.amazonaws.com',
             user='admin',
             password='admin123',
-            database='database-1>'
+            database='db_1'
         )
         
         # Create a cursor object
@@ -127,3 +127,58 @@ submit_button.grid(row=8, column=0, columnspan=2, padx=10, pady=10)
 
 # Start the application
 root.mainloop()
+# #Install pymysql package
+# # pip install pymysql
+
+# #Import pymysql package to do database programming with Python. Here we set the values for varaiables
+# #database_instance_endpoint = the db endpoint from AWS RDS Interface
+# #port = 3306 which is the port for MySQL
+# #user = the Master Username defined in AWS RDS DB
+# #password = password defined when creating DB
+# import pymysql
+# database_instance_endpoint="prod-db-1.chkyaa4u2erw.us-west-1.rds.amazonaws.com"
+# port=3306
+# dbname="db_1"
+# user="admin"
+# password="admin123"
+
+# # Now we will connect to the AWS RDS Database using the command pymysql.connect with the Database details from above.
+# # Then we store this value in the variable "connection"
+# connection = pymysql.connect(host=database_instance_endpoint,
+#                              port=port,
+#                              user=user,
+#                              password=password,
+#                              database=dbname)
+
+
+# # Declare varaiable for mycur which is a cursor. We need a cursor to query the database
+# # Using cursor, we can connect to the database
+# mycur = connection.cursor()
+
+# # Using MySQL query to create a new table called "students" with columns: id, firstname, lastname, grade with id as PRIMARY KEY
+# # Store the MySQL command in a variable "create_table_query"
+# create_table_query="""CREATE TABLE IF NOT EXISTS `students` (
+#                     `id` int(11) NOT NULL AUTO_INCREMENT,
+#                     `firstname` varchar(255) NOT NULL,`lastname` varchar(255) NOT NULL,`grade` varchar(10),
+#                      PRIMARY KEY (`id`)
+#                      ) ENGINE=INNODB;"""
+
+# # Using cursor to execute the command to create the table				
+# mycur.execute(create_table_query)
+
+# # Using MySQL command to insert a data row into the students table.
+# # Keey this MySQL command in the variable "insert_query"
+# insert_query="INSERT INTO `students` (`id`, `firstname`, `lastname`) VALUES (%s, %s, %s)"
+
+# # Using cursor to execute the insert query command to add more data into the table
+# mycur.execute(insert_query, ('12345', 'Tata', 'Tutu'))
+# mycur.execute(insert_query, ('34567', 'Momo', 'Meme'))
+
+# # Run the commit command to commit the change into the database
+# connection.commit()
+
+# # Check the result by query all the data from the students table
+# mycur.execute("SELECT * FROM students")
+
+# # Run the command to display the database table
+# mycur.fetchall()
