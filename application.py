@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
 import re
 
-app = Flask(__name__)
+application = Flask(__name__)
 app.secret_key = 'divya'  # Change this to your secret key
 
 # Function to validate email format
