@@ -2,12 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
 import re
 
+# Create Flask application instance
 application = Flask(__name__)
-application.secret_key = 'divya'  # Change this to your secret key
+application.secret_key = 'your_secret_key'  # Change this to a secure secret key
 
 # Function to validate email format
 def validate_email(email):
-    # Regular expression for basic email format validation
     pattern = r'^[a-zA-Z][a-zA-Z0-9._]*@[a-zA-Z]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, email)
 
@@ -17,21 +17,27 @@ def validate_age(age):
 
 # Function to connect to the MySQL database
 def connect_db():
-    return mysql.connector.connect(
-        host='database-1.cpo8g8224nk4.us-west-2.rds.amazonaws.com',
-        user='admin',
-        password='admin123',
-        database='database_rds'
-    )
+    try:
+        cnx = mysql.connector.connect(
+            host='database-1.cpo8g8224nk4.us-west-2.rds.amazonaws.com',
+            user='admin',
+            password='admin123',
+            database='database_rds'
+        )
+        return cnx
+    except mysql.connector.Error as err:
+        print(f"Error connecting to database: {err}")
+        return None
 
 # Route for the form page
-application = Flask(__name__)
+@application.route('/')
+def index():
+    return render_template('index.html')
 
 # Route to handle form submission
 @application.route('/submit_form', methods=['POST'])
 def submit_form():
     if request.method == 'POST':
-        # Retrieve data from form fields
         name = request.form['name']
         email = request.form['email']
         age = request.form['age']
@@ -41,8 +47,7 @@ def submit_form():
         state = request.form['state']
         country = request.form['country']
 
-        # Perform basic data validation
-        if not name or not email or not age or not gender or not address or not city or not state or not country:
+        if not all([name, email, age, gender, address, city, state, country]):
             flash('Please fill in all fields', 'error')
             return redirect(url_for('index'))
 
@@ -55,30 +60,27 @@ def submit_form():
             return redirect(url_for('index'))
 
         try:
-            # Connect to the MySQL database
             cnx = connect_db()
-            
-            # Create a cursor object
-            cursor = cnx.cursor()
+            if cnx:
+                cursor = cnx.cursor()
 
-            # Define the SQL query to insert data into the table
-            sql = "INSERT INTO students_data (name, email, age, gender, address, city, state, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                sql = "INSERT INTO students_data (name, email, age, gender, address, city, state, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(sql, (name, email, age, gender, address, city, state, country))
 
-            # Execute the SQL query with user input as parameters
-            cursor.execute(sql, (name, email, age, gender, address, city, state, country))
+                cnx.commit()
 
-            # Commit the transaction
-            cnx.commit()
+                cursor.close()
+                cnx.close()
 
-            # Close the cursor and connection
-            cursor.close()
-            cnx.close()
-
-            flash('Data submitted successfully', 'success')
-            return redirect(url_for('index'))
+                flash('Data submitted successfully', 'success')
+                return redirect(url_for('index'))
+            else:
+                flash('Error connecting to the database', 'error')
+                return redirect(url_for('index'))
         except mysql.connector.Error as err:
-            flash(f'Error: {err}', 'error')
+            flash(f'Database error: {err}', 'error')
             return redirect(url_for('index'))
 
 if __name__ == '__main__':
     application.run(debug=True)
+
