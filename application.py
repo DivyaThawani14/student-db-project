@@ -3,7 +3,7 @@ import mysql.connector
 import re
 
 application = Flask(__name__)
-app.secret_key = 'divya'  # Change this to your secret key
+application.secret_key = 'divya'  # Change this to your secret key
 
 # Function to validate email format
 def validate_email(email):
@@ -18,19 +18,17 @@ def validate_age(age):
 # Function to connect to the MySQL database
 def connect_db():
     return mysql.connector.connect(
-        host='prod-db-1.chkyaa4u2erw.us-west-1.rds.amazonaws.com',
+        host='database-1.cpo8g8224nk4.us-west-2.rds.amazonaws.com',
         user='admin',
         password='admin123',
-        database='db_1'
+        database='database_rds'
     )
 
 # Route for the form page
-@app.route('/')
-def index():
-    return render_template('index.html')
+application = Flask(__name__)
 
 # Route to handle form submission
-@app.route('/submit_form', methods=['POST'])
+@application.route('/submit_form', methods=['POST'])
 def submit_form():
     if request.method == 'POST':
         # Retrieve data from form fields
@@ -83,4 +81,4 @@ def submit_form():
             return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run(debug=True)
