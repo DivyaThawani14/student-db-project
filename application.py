@@ -38,7 +38,7 @@ def connect_db():
 # Route for the form page
 @application.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('form.html')
 
 # Route to handle form submission
 @application.route('/submit_form', methods=['POST'])
