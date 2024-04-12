@@ -3,7 +3,7 @@ version: 0.2
 phases:
   build:
     commands:
-      - aws s3 cp  s3://rds-credententials-bucket/prod/credentials.env .env
+      - aws s3 cp  s3://rds-credententials-bucket/configuration.env  .env
       - chmod 400 .env 
 
 artifacts:
