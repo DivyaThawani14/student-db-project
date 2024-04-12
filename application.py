@@ -68,7 +68,7 @@ def submit_form():
             if cnx:
                 cursor = cnx.cursor()
 
-                "INSERT INTO students (name, email, age, gender, address, city, state, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                sql = "INSERT INTO students (name, email, age, gender, address, city, state, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                 cursor.execute(sql, (name, email, age, gender, address, city, state, country))
 
                 cnx.commit()
