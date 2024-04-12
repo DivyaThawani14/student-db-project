@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
 import re
@@ -10,7 +9,6 @@ load_dotenv()
 
 # Create Flask application instance
 application = Flask(__name__)
-application.secret_key = 'your_secret_key'  # Change this to a secure secret key
 
 # Function to validate email format
 def validate_email(email):
@@ -25,10 +23,10 @@ def validate_age(age):
 def connect_db():
     try:
         cnx = mysql.connector.connect(
-            host=os.environ.get('DB_HOST'),
-            user=os.environ.get('DB_USER'),
+            host=os.environ.get('DB_ENDPOINT'),
+            user=os.environ.get('DB_USERNAME'),
             password=os.environ.get('DB_PASSWORD'),
-            database=os.environ.get('DB_DATABASE')
+            database=os.environ.get('DB_NAME')
         )
         return cnx
     except mysql.connector.Error as err:
